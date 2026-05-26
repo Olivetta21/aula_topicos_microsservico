@@ -3,15 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Teste Exportação CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 24px;
+        }
+
+        .campo {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 320px;
+            max-width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
     <h2>Teste de Exportação CSV</h2>
 
+    <div class="campo">
+        <label for="tituloEmpresa">Título da empresa</label>
+        <input id="tituloEmpresa" type="text" placeholder="Opcional">
+    </div>
+
+    <div class="campo">
+        <label for="periodoRelatorio">Período do relatório</label>
+        <input id="periodoRelatorio" type="text" placeholder="Opcional">
+    </div>
+
+    <div class="campo">
+        <label for="idRelatorio">ID</label>
+        <input id="idRelatorio" type="text" placeholder="Opcional">
+    </div>
+
+    <div class="campo">
+        <label for="tituloRelatorio">Título do relatório</label>
+        <input id="tituloRelatorio" type="text" placeholder="Opcional">
+    </div>
+
     <button id="baixarCsv">Baixar CSV</button>
 
     <script>
         document.getElementById('baixarCsv').addEventListener('click', () => {
+
+            const header = {
+                titulo_empresa: document.getElementById('tituloEmpresa').value.trim(),
+                periodo_relatorio: document.getElementById('periodoRelatorio').value.trim(),
+                id: document.getElementById('idRelatorio').value.trim(),
+                titulo_relatorio: document.getElementById('tituloRelatorio').value.trim()
+            };
+
+            const headerPreenchido = Object.values(header).some(valor => valor !== '');
 
             fetch('/relatorio.php', {
                 method: 'POST',
@@ -20,6 +77,7 @@
                 },
                 body: JSON.stringify({
                     titulo: 'usuarios',
+                    ...(headerPreenchido ? { header } : {}),
                     dados: [
                         {
                             nome: 'João',
