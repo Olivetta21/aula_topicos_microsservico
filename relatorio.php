@@ -44,27 +44,29 @@ fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
 // Header opcional do relatorio
 if (is_array($headerRelatorio)) {
-    $camposHeader = [
-        'titulo_empresa',
-        'periodo_relatorio',
-        'id',
-        'titulo_relatorio',
+    $linhasHeader = [
+        'Empresa: ' . ($headerRelatorio['titulo_empresa'] ?? ''),
+        'Período: ' . ($headerRelatorio['periodo_relatorio'] ?? ''),
+        'id: ' . ($headerRelatorio['id'] ?? ''),
+        $headerRelatorio['titulo_relatorio'] ?? '',
     ];
 
     $temHeader = false;
 
-    foreach ($camposHeader as $campo) {
-        if (array_key_exists($campo, $headerRelatorio) && $headerRelatorio[$campo] !== '' && $headerRelatorio[$campo] !== null) {
+    foreach ($linhasHeader as $linhaHeader) {
+        if ($linhaHeader !== '' && $linhaHeader !== null) {
             $temHeader = true;
             break;
         }
     }
 
     if ($temHeader) {
-        foreach ($camposHeader as $campo) {
-            if (array_key_exists($campo, $headerRelatorio) && $headerRelatorio[$campo] !== '' && $headerRelatorio[$campo] !== null) {
-                fputcsv($output, [str_replace('_', ' ', $campo), $headerRelatorio[$campo]], ';');
+        foreach ($linhasHeader as $linhaHeader) {
+            if ($linhaHeader === '' || $linhaHeader === null) {
+                continue;
             }
+
+            fputcsv($output, [$linhaHeader], ';');
         }
 
         fputcsv($output, [], ';');

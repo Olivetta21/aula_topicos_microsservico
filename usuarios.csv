@@ -1,4 +1,9 @@
-﻿nome;idade;cidade
+﻿"Empresa: Olivetta"
+"Período: 01/01/2024 - 31/12/2024"
+"id: 654"
+"usuarios do sistema"
+
+nome;idade;cidade
 João;30;"São Paulo"
 Maria;25;"Rio de Janeiro"
 Carlos;41;Curitiba
