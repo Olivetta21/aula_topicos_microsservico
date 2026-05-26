@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Exportação CSV</title>
+</head>
+<body>
+
+    <h2>Teste de Exportação CSV</h2>
+
+    <button id="baixarCsv">Baixar CSV</button>
+
+    <script>
+        document.getElementById('baixarCsv').addEventListener('click', () => {
+
+            fetch('/relatorio.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    titulo: 'usuarios',
+                    dados: [
+                        {
+                            nome: 'João',
+                            idade: 30,
+                            cidade: 'São Paulo'
+                        },
+                        {
+                            nome: 'Maria',
+                            idade: 25,
+                            cidade: 'Rio de Janeiro'
+                        },
+                        {
+                            nome: 'Carlos',
+                            idade: 41,
+                            cidade: 'Curitiba'
+                        }
+                    ]
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao gerar CSV');
+                }
+				
+                return response.blob();
+            })
+            .then(blob => {
+
+                // Cria URL temporária do arquivo
+                const url = window.URL.createObjectURL(blob);
+
+                // Cria link invisível
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'usuarios.csv';
+
+                // Faz download
+                document.body.appendChild(a);
+                a.click();
+
+                // Limpeza
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Erro ao baixar CSV');
+            });
+
+        });
+    </script>
+
+</body>
+</html>
